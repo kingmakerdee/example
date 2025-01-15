@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class JobListing extends Model {
-    
+class Job extends Model {
+    protected $table = 'Job_listings';
+
+    protected $fillable = ['title', 'salary'];
  }
