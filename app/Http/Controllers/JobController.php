@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\JobPosted;
 use App\Models\Job;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 
 class JobController extends Controller
 {
@@ -36,11 +38,15 @@ class JobController extends Controller
             'salary' => ['required'],
         ]);
     
-        JOb::create([
+        $job = Job::create([
             'title' => request('title'),
             'salary' => request('salary'),
             'employer_id' => 1
         ]);
+
+        Mail::to($job->employer->user)->send(
+            new JobPosted($job)
+        );
     
         return redirect('/jobs');
     }
@@ -67,7 +73,7 @@ class JobController extends Controller
     ]);
 
     // redirect to the job page
-    return redirect('/jobs/' . $job->id);
+    return redirect('/jobs' . $job->id);
     }
 
     public function destroy(Job $job)
